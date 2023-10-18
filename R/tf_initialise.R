@@ -22,7 +22,7 @@
 #' x <- dist$sample(100, with_params = list(rate = group + 1))
 #' global_fit <- fit(dist, x)
 #'
-#' if (keras::is_keras_available()) {
+#' if (interactive() && keras::is_keras_available()) {
 #'   library(keras)
 #'   l_in <- layer_input(shape = 1L)
 #'   mod <- tf_compile_model(
@@ -86,7 +86,7 @@ tf_initialise_model <- function(model, params, mode = c("scale", "perturb", "zer
           # Leave as-is
         },
         zero = {
-          layer$kernel$assign(tensorflow::tf$fill(layer$kernel$shape, 0.0))
+          layer$kernel$assign(tensorflow::tf$fill(layer$kernel$shape, K$zero))
         }
       )
     }

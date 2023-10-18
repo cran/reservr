@@ -199,13 +199,14 @@ ErlangMixtureDistribution <- distribution_class(
       scale <- args[["scale"]]
       scale <- tf$reshape(scale, keras::k_constant(as.integer(c(-1, 1)), dtype = "int32"))
 
-      x_safe <- tf$where(x > K$zero, x, K$one)
+      x_ok <- tf$math$is_finite(x) & x > K$zero
+      x_safe <- tf$where(x_ok, x, K$one)
 
       tf$where(
-        x > K$zero,
+        x_ok,
         tf$math$reduce_logsumexp(
           tf$where(
-            (x > K$zero)[, tf$newaxis],
+            x_ok[, tf$newaxis],
             log(probs) -
               shapes * log(scale) +
               (shapes - K$one) * log(x_safe[, tf$newaxis]) -
@@ -213,7 +214,7 @@ ErlangMixtureDistribution <- distribution_class(
             K$neg_inf
           ),
           axis = 1L
-        ) - x / scale[, 1L],
+        ) - x_safe / scale[, 1L],
         K$neg_inf
       )
     }
@@ -227,6 +228,8 @@ ErlangMixtureDistribution <- distribution_class(
       shapes <- tf$reshape(shapes, keras::k_constant(as.integer(c(1, -1)), dtype = "int32"))
       scale <- args[["scale"]]
       scale <- tf$reshape(scale, keras::k_constant(as.integer(c(-1, 1)), dtype = "int32"))
+      qmin <- tf$reshape(qmin, list(-1L))
+      qmax <- tf$reshape(qmax, list(-1L))
 
       qmax_ok <- tf$math$is_finite(qmax) & qmax > K$zero
       qmin_ok <- qmin > K$zero

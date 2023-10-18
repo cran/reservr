@@ -1,7 +1,7 @@
 Package: reservr
 Title: Fit Distributions and Neural Networks to Censored and Truncated
         Data
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     person(given = "Alexander",
            family = "Rosenstock",
@@ -35,7 +35,7 @@ Suggests: covr, callr, colorspace, data.table, dplyr (>= 0.8.4), evmix,
 LinkingTo: BH, Rcpp, RcppArmadillo, RcppParallel
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.2.2
+RoxygenNote: 7.2.3
 SystemRequirements: GNU make
 Collate: 'RcppExports.R' 'fit_util.R' 'distribution_class.R' 'zzz.R'
         'interval.R' 'aaa.R' 'blended_transition.R'
@@ -55,10 +55,11 @@ Collate: 'RcppExports.R' 'fit_util.R' 'distribution_class.R' 'zzz.R'
         'tf_fit.R' 'tf_initialise.R' 'tf_util.R'
         'trunc_erlangmix_init.R' 'trunc_obs.R' 'truncate_claims.R'
         'weighted_stats.R'
-URL: https://ashesitr.github.io/reservr/
+URL: https://ashesitr.github.io/reservr/,
+        https://github.com/AshesITR/reservr
 NeedsCompilation: yes
-Packaged: 2022-12-08 22:00:31 UTC; alex
+Packaged: 2023-10-18 20:32:23 UTC; alex
 Author: Alexander Rosenstock [aut, cre, cph]
 Maintainer: Alexander Rosenstock <alexander.rosenstock@web.de>
 Repository: CRAN
-Date/Publication: 2022-12-09 14:40:02 UTC
+Date/Publication: 2023-10-18 20:50:05 UTC

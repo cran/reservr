@@ -4,6 +4,7 @@
 <!-- badges: start -->
 [![Codecov test coverage](https://codecov.io/gh/AshesITR/reservr/branch/master/graph/badge.svg)](https://app.codecov.io/gh/AshesITR/reservr?branch=master)
 [![R-CMD-check](https://github.com/AshesITR/reservr/workflows/R-CMD-check/badge.svg)](https://github.com/AshesITR/reservr/actions)
+[![CRAN status](https://www.r-pkg.org/badges/version/reservr)](https://CRAN.R-project.org/package=reservr)
 <!-- badges: end -->
 
 The goal of reservr is to provide a flexible interface for specifying distributions and fitting them to (randomly) 
@@ -25,11 +26,10 @@ You can install the latest development version of reservr via
 devtools::install_github("AshesITR/reservr")
 ```
 
-<!-- You can install the released version of reservr from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of reservr from [CRAN](https://CRAN.R-project.org) with:
 ``` r
 install.packages("reservr")
 ```
---->
 
 If you want to use all of reservrs features, make sure to also install
 [tensorflow](https://tensorflow.rstudio.com/installation/).
