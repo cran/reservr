@@ -45,17 +45,17 @@ The minimum number of epochs between two learning rate reductions is \code{patie
 This is very useful if the metric oscillates.}
 }
 \value{
-A \code{KerasCallback} suitable for passing to \code{\link[keras:reexports]{keras::fit()}}.
+A \code{KerasCallback} suitable for passing to \code{\link[keras3:reexports]{keras3::fit()}}.
 }
 \description{
-Provides a keras callback similar to \code{\link[keras:callback_reduce_lr_on_plateau]{keras::callback_reduce_lr_on_plateau()}} but which also restores the weights
+Provides a keras callback similar to \code{\link[keras3:callback_reduce_lr_on_plateau]{keras3::callback_reduce_lr_on_plateau()}} but which also restores the weights
 to the best seen so far whenever a learning rate reduction occurs, and with slightly more restrictive improvement
 detection.
 }
 \details{
-Note that while \code{\link[=callback_reduce_lr_on_plateau]{callback_reduce_lr_on_plateau()}} automatically logs the learning rate as a metric 'lr',
+Note that while \code{\link[keras3:callback_reduce_lr_on_plateau]{keras3::callback_reduce_lr_on_plateau()}} automatically logs the learning rate as a metric 'lr',
 this is currently impossible from R.
-Thus, if you want to also log the learning rate, you should add \code{\link[=callback_reduce_lr_on_plateau]{callback_reduce_lr_on_plateau()}} with a high
+Thus, if you want to also log the learning rate, you should add \code{\link[keras3:callback_reduce_lr_on_plateau]{keras3::callback_reduce_lr_on_plateau()}} with a high
 \code{min_lr} to effectively disable the callback but still monitor the learning rate.
 }
 \examples{
@@ -64,8 +64,8 @@ group <- sample(c(0, 1), size = 100, replace = TRUE)
 x <- dist$sample(100, with_params = list(rate = group + 1))
 global_fit <- fit(dist, x)
 
-if (interactive() && keras::is_keras_available()) {
-  library(keras)
+if (interactive()) {
+  library(keras3)
   l_in <- layer_input(shape = 1L)
   mod <- tf_compile_model(
     inputs = list(l_in),
@@ -78,7 +78,7 @@ if (interactive() && keras::is_keras_available()) {
   tf_initialise_model(mod, global_fit$params)
   fit_history <- fit(
     mod,
-    x = k_constant(group),
+    x = as_tensor(group, config_floatx()),
     y = as_trunc_obs(x),
     epochs = 20L,
     callbacks = list(
@@ -89,7 +89,7 @@ if (interactive() && keras::is_keras_available()) {
 
   plot(fit_history)
 
-  predicted_means <- predict(mod, data = k_constant(c(0, 1)))
+  predicted_means <- predict(mod, data = as_tensor(c(0, 1), config_floatx()))
 }
 
 }

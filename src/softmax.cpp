@@ -4,6 +4,10 @@ using namespace arma;
 
 // [[Rcpp::export]]
 arma::mat softmax_mat(arma::mat x) {
+  if (x.n_elem == 0) {
+    arma::mat empty = arma::zeros(arma::size(x));
+    return empty;
+  }
   x.each_col() -= max(x, 1);
   mat ex = exp(x);
   vec row_sums = sum(ex, 1);
@@ -13,6 +17,9 @@ arma::mat softmax_mat(arma::mat x) {
 
 // [[Rcpp::export]]
 std::vector<double> softmax_vec(arma::vec x) {
+  if (x.n_elem == 0) {
+    return Rcpp::as<std::vector<double>>(Rcpp::wrap(x));
+  }
   x -= max(x);
   vec ex = exp(x);
   return Rcpp::as<std::vector<double>>(Rcpp::wrap(ex / sum(ex)));
@@ -20,6 +27,10 @@ std::vector<double> softmax_vec(arma::vec x) {
 
 // [[Rcpp::export]]
 arma::mat dsoftmax_vec(arma::vec x) {
+  if (x.n_elem == 0) {
+    arma::mat empty = arma::zeros(0, 0);
+    return empty;
+  }
   x -= max(x);
   vec ex = exp(x);
   ex /= sum(ex);

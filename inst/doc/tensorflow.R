@@ -7,12 +7,12 @@ knitr::opts_chunk$set(
 ## ----setup--------------------------------------------------------------------
 library(reservr)
 library(tensorflow)
-library(keras)
+library(keras3)
 library(tibble)
 library(ggplot2)
 
 ## ----sim-data-----------------------------------------------------------------
-if (keras::is_keras_available()) {
+if (reticulate::py_module_available("keras")) {
   set.seed(1431L)
   tensorflow::set_random_seed(1432L)
 
@@ -21,7 +21,7 @@ if (keras::is_keras_available()) {
     y = 2 * x + rnorm(100)
   )
 
-  ggplot2::qplot(x, y, data = dataset)
+  print(qplot(x, y, data = dataset))
 
   # Specify distributional assumption of OLS:
   dist <- dist_normal(sd = 1.0) # OLS assumption: homoskedasticity
@@ -34,11 +34,7 @@ if (keras::is_keras_available()) {
   # in practice, this would be deeper
   nnet_output <- nnet_input
 
-  optimizer <- if (packageVersion("keras") >= "2.6.0") {
-    optimizer_adam(learning_rate = 0.1)
-  } else {
-    optimizer_adam(lr = 0.1)
-  }
+  optimizer <- optimizer_adam(learning_rate = 0.1)
 
   nnet <- tf_compile_model(
     inputs = list(nnet_input),
@@ -51,19 +47,22 @@ if (keras::is_keras_available()) {
 
   nnet_fit <- fit(nnet, x = dataset$x, y = dataset$y, epochs = 100L, batch_size = 100L, shuffle = FALSE)
 
-  plot(nnet_fit)
+  # Fix weird behavior of keras3
+  nnet_fit$params$epochs <- max(nnet_fit$params$epochs, length(nnet_fit$metrics$loss))
+  print(plot(nnet_fit))
 
-  pred_params <- predict(nnet, data = list(k_constant(dataset$x)))
+  pred_params <- predict(nnet, data = list(as_tensor(dataset$x, config_floatx())))
 
   lm_fit <- lm(y ~ x, data = dataset)
 
   dataset$y_pred <- pred_params$mean
   dataset$y_lm <- predict(lm_fit, newdata = dataset, type = "response")
 
-  ggplot(dataset, aes(x = x, y = y)) %+%
+  p <- ggplot(dataset, aes(x = x, y = y)) %+%
     geom_point() %+%
     geom_line(aes(y = y_pred)) %+%
     geom_line(aes(y = y_lm), linetype = 2L)
+  print(p)
 
   coef_nnet <- rev(as.numeric(nnet$model$get_weights()))
   coef_lm <- coef(lm_fit)

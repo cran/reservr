@@ -37,8 +37,8 @@ group <- sample(c(0, 1), size = 100, replace = TRUE)
 x <- dist$sample(100, with_params = list(rate = group + 1))
 global_fit <- fit(dist, x)
 
-if (interactive() && keras::is_keras_available()) {
-  library(keras)
+if (interactive()) {
+  library(keras3)
   l_in <- layer_input(shape = 1L)
   mod <- tf_compile_model(
     inputs = list(l_in),
@@ -56,7 +56,7 @@ if (interactive() && keras::is_keras_available()) {
     epochs = 200L
   )
 
-  predicted_means <- predict(mod, data = k_constant(c(0, 1)))
+  predicted_means <- predict(mod, data = as_tensor(c(0, 1), config_floatx()))
 }
 
 }
